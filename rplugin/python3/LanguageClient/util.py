@@ -39,10 +39,19 @@ def get_rootPath(filepath: str, languageId: str) -> str:
             filepath, lambda folder:
                 os.path.exists(os.path.join(folder, "package.json")))
     elif languageId == "python":
-        rootPath = traverse_up(
-            filepath, lambda folder: (
-                os.path.exists(os.path.join(folder, "__init__.py")) or
-                os.path.exists(os.path.join(folder, "setup.py"))))
+        rootPath = (
+            traverse_up(
+                filepath,
+                lambda folder: (
+                    os.path.exists(os.path.join(folder, "setup.py")) or
+                    os.path.exists(os.path.join(folder, "setup.cfg")) or
+                    os.path.exists(os.path.join(folder, "requirements.txt")) or
+                    os.path.exists(os.path.join(folder, "Pipenv")) or
+                    os.path.exists(os.path.join(folder, "tox.ini")))) or
+            traverse_up(
+                filepath, lambda folder: os.path.exists(os.path.join(folder, "main.py"))) or
+            traverse_up(
+                filepath, lambda folder: os.path.exists(os.path.join(folder, "__init__.py"))))
     elif languageId == "cs":
         rootPath = traverse_up(filepath, is_dotnet_root)
     elif languageId == "java":
