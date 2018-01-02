@@ -44,8 +44,8 @@ pub fn get_rootPath<'a>(path: &'a Path, languageId: &str, rootMarkers: &Option<R
         "php" => traverse_up(path, |dir| dir.join("composer.json").exists()),
         "javascript" | "typescript" => traverse_up(path, |dir| dir.join("package.json").exists()),
         "python" => traverse_up(path, |dir| {
-            dir.join("__init__.py").exists() || dir.join("setup.py").exists()
-        }),
+            dir.join("setup.py").exists() || dir.join("setup.cfg").exists() || dir.join("requirements.txt").exists() || dir.join("Pipenv").exists() || dir.join("tox.ini").exists()
+        }) || traverse_up(path, |dir| { dir.join("main.py").exists() }) || traverse_up(path, |dir| { dir.join("__init__.py").exists() }),
         "c" | "cpp" => traverse_up(path, |dir| dir.join("compile_commands.json").exists()),
         "cs" => traverse_up(path, is_dotnet_root),
         "java" => traverse_up(path, |dir| {
